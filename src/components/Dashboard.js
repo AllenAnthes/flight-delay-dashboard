@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {getAirportStatus} from "../util/api";
 import MapUS from "./MapUS";
+import {getViewport} from "../util/getViewport";
 
 const airports = {
     BOS: {name: '', coords: [42.3656, -71.0096], numDelays: 0, status: []},
@@ -50,7 +51,8 @@ class Dashboard extends Component {
 
     state = {
         showModal: false,
-        airports: airports
+        airports: airports,
+        viewport: '',
     };
 
     async componentDidMount() {
@@ -61,7 +63,9 @@ class Dashboard extends Component {
             airports[airport.code].status = airport.status;
             airports[airport.code].name = airport.name;
         });
-        this.setState({airports})
+        const viewport = getViewport();
+        console.log(viewport);
+        this.setState({airports, viewport})
     }
 
 
@@ -79,12 +83,16 @@ class Dashboard extends Component {
     };
 
     render() {
-        const {airports} = this.state;
+        const {airports, viewport} = this.state;
         return (
             <div>
                 <MapUS
                     airports={airports}
+                    viewport={viewport}
                 />
+                <div >
+                    <p>{`Height: ${viewport.height} Width: ${viewport.width}`}</p>
+                </div>
             </div>
         )
     }

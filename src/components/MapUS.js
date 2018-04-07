@@ -58,8 +58,10 @@ class MapUS extends Component {
                      zoom={zoom}
                      provider={provider}
                      onBoundsChanged={this.handleBoundsChange}
-                     width={1200}
-                     height={600}
+                     // width={1200}
+                     // height={600}
+                     width={Math.min(this.props.viewport.width, 1200)}
+                     height={Math.min(this.props.viewport.height, 600)}
                      attribution={false}
                      mouseWheelMetaText={null}>
                     {Object.keys(airports).map(key => (

@@ -70,6 +70,7 @@ export default class Marker extends Component {
     }
 
     image() {
+        // TODO: Make this not absolutely horrible
         return this.isRetina()
             ? this.isHover()
                 ? this.props.numDelays === 0
