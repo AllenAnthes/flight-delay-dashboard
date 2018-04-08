@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import Map from 'pigeon-maps'
 import Marker from './Marker'
 import {getAirportStatus} from "../util/api";
-import {Modal} from "antd";
 
 const provider = (x, y, z) => {
     const s = String.fromCharCode(97 + (x + y + z) % 3);
@@ -33,11 +32,6 @@ class MapUS extends Component {
         }
     };
 
-    closeModal = () => {
-        this.setState({showModal: false})
-    };
-
-
     handleBoundsChange = ({center, zoom, bounds, initial}) => {
         if (initial) {
             console.log('Got initial bounds: ', bounds)
@@ -49,19 +43,20 @@ class MapUS extends Component {
     };
 
     render() {
-        const {center, zoom} = this.state;
+        const {center} = this.state;
         const airports = this.props.airports;
+        const {zoom, height, width} = this.props.viewportConfigs;
+
 
         return (
             <div style={{textAlign: 'center', marginTop: 50}}>
-                <Map center={center}
+                <Map defaultCenter={center}
                      zoom={zoom}
                      provider={provider}
-                     onBoundsChanged={this.handleBoundsChange}
-                     // width={1200}
-                     // height={600}
-                     width={Math.min(this.props.viewport.width, 1200)}
-                     height={Math.min(this.props.viewport.height, 600)}
+                     animate={false}
+                     zoomOnMouseWheel={false}
+                     width={width}
+                     height={height}
                      attribution={false}
                      mouseWheelMetaText={null}>
                     {Object.keys(airports).map(key => (
@@ -77,24 +72,6 @@ class MapUS extends Component {
                             airport={airports[key]}/>
                     ))}
                 </Map>
-                {this.state.showModal
-                    ? <Modal
-                        visible={this.state.showModal}
-                        title={`${this.state.info.name} ${this.state.info.code}`}
-                        onOk={this.closeModal}
-                        onCancel={this.closeModal}
-                    >
-                        {this.state.info.status.map(({Type, Reason}, index) => {
-                            return (
-                                <div key={index}>
-                                    {Type && <p>{Type}</p>}
-                                    {Reason && <p>{Reason}</p>}
-                                </div>
-                            )
-                        })}
-                    </Modal>
-                    : null
-                }
             </div>
         )
     }
