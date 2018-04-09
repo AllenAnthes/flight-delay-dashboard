@@ -8,4 +8,3 @@ export function getViewport() {
     }
     return { width : e[ a+'Width' ] , height : e[ a+'Height' ] }
 }
-

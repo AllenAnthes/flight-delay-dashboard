@@ -1,7 +1,14 @@
-import React, {Component} from 'react';
-import {AutoComplete} from 'antd';
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+import {AutoComplete} from 'antd'
+
 
 class Search extends Component {
+    static propTypes = {
+        dataSource: PropTypes.arrayOf(PropTypes.string),
+        handleSelect: PropTypes.func,
+    };
+
     onSelect = (value) => {
         console.log('onSelect', value);
     };
@@ -17,7 +24,7 @@ class Search extends Component {
                 dataSource={dataSource}
                 style={{width: 200}}
                 onSelect={handleSelect}
-                placeholder="input here"
+                placeholder="Enter Airport Code"
                 filterOption={this.handleSearch}
             />
         );

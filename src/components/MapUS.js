@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import Map from 'pigeon-maps'
 import Marker from './Marker'
-import {getAirportStatus} from "../util/api";
 
 const provider = (x, y, z) => {
     const s = String.fromCharCode(97 + (x + y + z) % 3);
@@ -13,33 +12,21 @@ class MapUS extends Component {
     static propTypes = {
         airports: PropTypes.shape({
             coords: PropTypes.arrayOf(PropTypes.number),
-            numDelays: PropTypes.number,
-            statuses: PropTypes.array,
+            delay: PropTypes.bool,
+            delays: PropTypes.array,
+        }),
+        viewportConfigs: PropTypes.shape({
+            zoom: PropTypes.number,
+            height: PropTypes.number,
+            width: PropTypes.number,
         })
-    };
+    }.required;
 
     state = {
         center: [38.6186, -95.8918],
         zoom: 4.7,
         zoomOnMouseWheel: true,
         statuses: {},
-    };
-
-    handleClick = async ({event, payload, anchor}) => {
-        const info = await getAirportStatus(payload);
-        if (info) {
-            this.setState({showModal: true, info});
-        }
-    };
-
-    handleBoundsChange = ({center, zoom, bounds, initial}) => {
-        if (initial) {
-            console.log('Got initial bounds: ', bounds)
-        }
-        this.setState({center, zoom})
-    };
-
-    handleMouseOver = (event) => {
     };
 
     render() {
@@ -49,7 +36,7 @@ class MapUS extends Component {
 
 
         return (
-            <div style={{textAlign: 'center', marginTop: 50}}>
+            <div style={{textAlign: 'center', marginTop: 10}}>
                 <Map defaultCenter={center}
                      zoom={zoom}
                      provider={provider}
@@ -60,15 +47,12 @@ class MapUS extends Component {
                      attribution={false}
                      mouseWheelMetaText={null}>
                     {Object.keys(airports).map(key => (
-                        <Marker
+                            <Marker
                             key={key}
                             anchor={airports[key].coords}
-                            payload={key}
-                            onClick={this.handleClick}
-                            onMouseOver={this.handleMouseOver}
+                            delay={airports[key].delay}
+                            onClick={this.props.handleClick}
                             airportCode={key}
-                            numDelays={airports[key].numDelays}
-                            status={airports[key].status}
                             airport={airports[key]}/>
                     ))}
                 </Map>

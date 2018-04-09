@@ -18,49 +18,24 @@ const imageOffset = {
 
 export default class Marker extends Component {
     static propTypes = {
-        // input, passed to events
-        anchor: PropTypes.array.isRequired,
-        payload: PropTypes.any,
-
-        // optional modifiers
-        hover: PropTypes.bool,
-
-        // callbacks
+        anchor: PropTypes.array,
         onClick: PropTypes.func,
-        onContextMenu: PropTypes.func,
-        onMouseOver: PropTypes.func,
-        onMouseOut: PropTypes.func,
-
-        // pigeon variables
-        left: PropTypes.number,
-        top: PropTypes.number,
-
-        // pigeon functions
-        latLngToPixel: PropTypes.func,
-        pixelToLatLng: PropTypes.func,
-
-        // added props
         airportCode: PropTypes.string,
-        airport: PropTypes.object
-    };
+        airport: PropTypes.object,
+        delay: PropTypes.bool,
+        hover: PropTypes.bool,
+    }.isRequired;
 
     constructor(props) {
         super(props);
-
         this.state = {
-            hover: false
+            hover: false,
+            images: {}
         }
     }
 
-    // what do you expect to get back with the event
-    eventParameters = (event) => ({
-        event,
-        anchor: this.props.anchor,
-        payload: this.props.payload
-    });
-
     // controls
-    isRetina() {
+    static isRetina() {
         return typeof window !== 'undefined' && window.devicePixelRatio >= 2
     }
 
@@ -70,76 +45,72 @@ export default class Marker extends Component {
     }
 
     image() {
-        // TODO: Make this not absolutely horrible
-        return this.isRetina()
-            ? this.isHover()
-                ? this.props.numDelays === 0
-                    ? pinHoverRetina
-                    : delaysPinHoverRetina
-                : this.props.numDelays === 0
-                    ? pinRetina
-                    : delaysPinRetina
-            : this.isHover()
-                ? this.props.numDelays === 0
-                    ? pinHover
-                    : delaysPinHover
-                : this.props.numDelays === 0
-                    ? pin
-                    : delaysPin
+        const {images} = this.state;
+        return this.isHover()
+            ? this.props.delay
+                ? images['delayHover']
+                : images['hover']
+            : this.props.delay
+                ? images['delay']
+                : images['noHover']
     }
+
     componentDidMount() {
-        let images = this.isRetina()
-            ? this.props.numDelays && this.props.numDelays > 0
-                ? [delaysPinRetina, delaysPinHoverRetina]
-                : [pinRetina, pinHoverRetina]
-            : this.props.numDelays && this.props.numDelays > 0
-                ? [delaysPin, delaysPinHover]
-                : [pin, pinHover];
+        let images = Marker.isRetina()
+            ? [pinRetina, pinHoverRetina, delaysPinRetina, delaysPinHoverRetina]
+            : [pin, pinHover, delaysPin, delaysPinHover];
 
         images.forEach(image => {
             let img = new window.Image();
             img.src = image
-        })
+        });
+
+        const imageChoices = Marker.isRetina()
+            ? {
+                noHover: pinRetina,
+                hover: pinHoverRetina,
+                delay: delaysPinRetina,
+                delayHover: delaysPinHoverRetina
+            }
+            : {
+                noHover: pin,
+                hover: pinHover,
+                delay: delaysPin,
+                delayHover: delaysPinHover
+            };
+        this.setState({images: imageChoices})
     }
 
-    // delegators
-
     handleClick = () => {
-        this.props.onClick && this.props.onClick(this.eventParameters())
-    };
-
-    handleContextMenu = () => {
-        this.props.onContextMenu && this.props.onContextMenu(this.eventParameters())
+        this.props.onClick(this.props.airportCode)
     };
 
     handleMouseOver = () => {
-        this.props.onMouseOver && this.props.onMouseOver(this.eventParameters());
         this.setState({hover: true})
     };
 
     handleMouseOut = () => {
-        this.props.onMouseOut && this.props.onMouseOut(this.eventParameters());
         this.setState({hover: false})
     };
 
     render() {
         const {left, top, onClick, airport, airportCode} = this.props;
-        const {numDelays, name, status} = airport;
+        const {name, delays, delay} = airport;
 
         const style = {
             position: 'absolute',
             transform: `translate(${left - imageOffset.left}px, ${top - imageOffset.top}px)`,
             cursor: onClick ? 'pointer' : 'default'
         };
-        const content = numDelays === 0
+        const content = !delay
             ? <p>No reported delays</p>
             : (<div>
-                {status.map(({Type, Reason, AvgDelay}, index) => {
+                {delays.map(({type, reason, avgDelay}, index) => {
                     return (
                         <div key={index} className={'popover-body'}>
-                            {Type && <p>{`Type: ${Type}`}</p>}
-                            {Reason && <p>{`Reason: ${Reason}`}</p>}
-                            {AvgDelay && <p>{`Average Delay: ${AvgDelay}`}</p>}
+                            {type && <p>{`Type: ${type}`}</p>}
+                            {reason && <p>{`Reason: ${reason}`}</p>}
+                            {avgDelay && <p>{`Average Delay: ${avgDelay}`}</p>}
                         </div>
                     )
                 })}
@@ -149,14 +120,13 @@ export default class Marker extends Component {
             <div style={style}
                  className='pigeon-click-block'
                  onClick={this.handleClick}
-                 onContextMenu={this.handleContextMenu}
                  onMouseOver={this.handleMouseOver}
                  onMouseOut={this.handleMouseOut}>
                 <img src={this.image()} width={29} height={34} alt=''/>
                 <Popover
                     key={airportCode + Math.random().toString()}
                     title={name}
-                    visible={this.isHover()}
+                    visible={this.state.hover}
                     content={content}
                 > </Popover>
             </div>
