@@ -4,6 +4,11 @@ import {Tabs} from 'antd'
 
 const TabPane = Tabs.TabPane;
 
+/**
+ * Utility function for formatting delays
+ * @param delay in the format of {delay:[delay], reason:[reason]
+ * @param index
+ */
 function mapDelays(delay, index) {
     return (
         <Fragment key={index}>
@@ -13,6 +18,10 @@ function mapDelays(delay, index) {
     )
 }
 
+/**
+ * Component for displaying a quick "at-a-glance"
+ * summary of current airports with delays
+ */
 export default class Summary extends Component {
     static propTypes = {
         summary: PropTypes.arrayOf(PropTypes.shape({

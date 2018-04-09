@@ -9,6 +9,11 @@ import Summary from "./Summary"
 
 const DEFAULT_AIRPORTS = airports;
 
+/**
+ * Primary container component.
+ * Interacts with the external API and passes props
+ * down to be displayed
+ */
 class Dashboard extends Component {
 
     state = {
@@ -46,7 +51,6 @@ class Dashboard extends Component {
     };
 
     render() {
-
         const {airports, viewportConfigs, summary} = this.state;
         return (
             <div className={'App'}>

@@ -16,6 +16,10 @@ const imageOffset = {
     top: 31
 };
 
+/**
+ * Modified pigeon-maps Marker plugin from
+ * https://github.com/mariusandra/pigeon-marker
+ */
 export default class Marker extends Component {
     static propTypes = {
         anchor: PropTypes.array,
@@ -127,8 +131,7 @@ export default class Marker extends Component {
                     key={airportCode + Math.random().toString()}
                     title={name}
                     visible={this.state.hover}
-                    content={content}
-                > </Popover>
+                    content={content}/>
             </div>
         )
     }

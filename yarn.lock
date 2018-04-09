@@ -5309,14 +5309,6 @@ pigeon-maps@^0.9.2:
     eslint-plugin-import "^2.7.0"
     eslint-plugin-node "^5.2.0"
 
-pigeon-marker@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/pigeon-marker/-/pigeon-marker-0.3.3.tgz#8acd5b5a25c7d897a61d6a90b1c9dd7f73d0a40a"
-
-pigeon-overlay@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/pigeon-overlay/-/pigeon-overlay-0.2.2.tgz#5dfaa0ff2603bcc4ae0e47aa80d818f700312c1b"
-
 pinkie-promise@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/pinkie-promise/-/pinkie-promise-2.0.1.tgz#2135d6dfa7a358c069ac9b178776288228450ffa"

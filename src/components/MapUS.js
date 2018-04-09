@@ -8,6 +8,11 @@ const provider = (x, y, z) => {
     return `https://${s}.tile.openstreetmap.org/${z}/${x}/${y}.png`
 };
 
+/**
+ * Component for encapsulating pigeon-maps
+ * Uses openstreetmaps to plot current status
+ * of supplied US airports
+ */
 class MapUS extends Component {
     static propTypes = {
         airports: PropTypes.shape({
@@ -33,7 +38,6 @@ class MapUS extends Component {
         const {center} = this.state;
         const airports = this.props.airports;
         const {zoom, height, width} = this.props.viewportConfigs;
-
 
         return (
             <div style={{textAlign: 'center', marginTop: 10}}>

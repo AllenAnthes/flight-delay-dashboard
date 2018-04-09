@@ -2,7 +2,11 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {AutoComplete} from 'antd'
 
-
+/**
+ * Component supplies an alternative to the map for
+ * selecting an airport to view delays
+ * Contains a simple auto-complete component
+ */
 class Search extends Component {
     static propTypes = {
         dataSource: PropTypes.arrayOf(PropTypes.string),
