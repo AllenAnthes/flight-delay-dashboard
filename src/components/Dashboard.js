@@ -72,7 +72,7 @@ class Dashboard extends Component {
                 {this.state.showModal
                     ? <Modal
                         visible={this.state.showModal}
-                        title={`${airports[this.state.details].name}`}
+                        title={`${this.state.details} - ${airports[this.state.details].name}`}
                         onOk={this.closeModal}
                         onCancel={this.closeModal}
                     >

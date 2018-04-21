@@ -129,7 +129,7 @@ export default class Marker extends Component {
                 <img src={this.image()} width={29} height={34} alt=''/>
                 <Popover
                     key={airportCode + Math.random().toString()}
-                    title={name}
+                    title={`${airportCode} - ${name}`}
                     visible={this.state.hover}
                     content={content}/>
             </div>
